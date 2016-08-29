@@ -1,5 +1,10 @@
 var canvas = document.getElementById('screen');
 var ctx = canvas.getContext('2d');
+var backCanvas = document.createElement('canvas');
+backCanvas.width = canvas.width;
+backCanvas.heigh = canvas.height;
+var backCtx = bankCanvas.getContext('2d');
+
 var speed = 1/16/1000;
 
 var x = 0;
@@ -66,9 +71,7 @@ window.onkeyup = function(event) {
   }
 }
 
-function loop() {
-  ctx.fillStyle = "Red";
-  ctx.fillRect(x, y, 5, 5);
+function loop(timestamp) {
   if(input.up) {
     y -= 1;
   }
@@ -81,6 +84,29 @@ function loop() {
   if(input.left) {
     x -= 1;
   }
+
+  backCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for(i = 0; i < 100; i++) {
+    backCtx.fillStyle = "blue";
+    backCtx.fillRect(
+      (i * 20) % 100,
+      (i * 20) % 100,
+      10,
+      10
+    )
+  }
+
+  backCtx.fillStyle = "Red";
+  backCtx.fillRect(x, y, 5, 5);
+
+  //Swap buffers
+  ctx.drawImage(backCanvas, 0, 0);
+
   setTimeout(loop, speed);
+  //requestAnimationFrame(loop);
 }
+//var intervalId = setInterval(loop,speed);
+//requestAnimationFrame(loop);
+
 loop();
